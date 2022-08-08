@@ -20,18 +20,14 @@ parser.add_argument('-c', '--count',
 args = parser.parse_args()
 
 # Read the names, print the count
-names = []
-for line in args.names:
-    names.append(line.strip())
+names = [ line.strip() for line in args.names ]
 numnames = len(names)
 # print('Read', numnames, 'names')
-if len(names) > 0xFFFF:
+if numnames > 0xFFFF:
     raise SystemError("Too many names (under 0xFFFF)")
 
 # From RFC 3797; "notpicked" might be a better name
-selected = []
-for i in range(0, numnames):
-    selected.append(i + 1)
+selected = [i + 1 for i in range(0, numnames) ]
 
 # Read the seeds.
 seeds = []
