@@ -17,12 +17,14 @@ parser.add_argument('-n', '--names',
 parser.add_argument('-c', '--count', 
         help='Number of entries to print',
         default=12, metavar='N', type=int)
+parser.add_argument('-d', '--debug',
+        action='store_true', help='Print some debugging information')
 args = parser.parse_args()
 
 # Read the names, print the count
 names = [ line.strip() for line in args.names ]
 numnames = len(names)
-# print('Read', numnames, 'names')
+if args.debug: print('Read', numnames, 'names')
 if numnames > 0xFFFF:
     raise SystemError("Too many names (under 0xFFFF)")
 
@@ -42,7 +44,7 @@ keystring = ''
 for s in seeds:
     keystring += '.'.join([ str(n) for n in s ])
     keystring += './'
-# print('Key string is ', keystring)
+if args.debug:  print('Key string is', keystring)
 keybytes = keystring.encode()
 
 # Do the work
