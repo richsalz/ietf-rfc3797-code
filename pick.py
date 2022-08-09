@@ -28,8 +28,9 @@ if args.debug: print('Read', numnames, 'names')
 if numnames > 0xFFFF:
     raise SystemError("Too many names (under 0xFFFF)")
 
-# From RFC 3797; "notpicked" might be a better name
-selected = [i + 1 for i in range(0, numnames) ]
+# We could directly shrink the names list (such as by
+# using `names.pop(k)`) but then the indices would vary.
+selected = [ i + 1 for i in range(0, numnames) ]
 
 # Read the seeds.
 seeds = []
@@ -56,9 +57,10 @@ for i in range(0, args.count):
     result = hashlib.md5(bracket + keybytes + bracket).hexdigest().upper()
     k = int(result, 16) % div
     for j in range(0, numnames):
-        if selected[j] != 0:
+        if selected[j]:
             k -= 1
             if k < 0: break
+    assert k < 0
     print(' %4d  %s  %2d  -> %2d <- %s' % \
             (i + 1, result, div, selected[j], names[j]))
     selected[j] = 0
