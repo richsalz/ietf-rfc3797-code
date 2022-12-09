@@ -21,10 +21,18 @@ significant.
 
 To run the program, you can use `-h` for help. Normal use is
 
-    ./pick.py -s seeds -n names -cCOUNT
+    ./pick -s seeds -n names -cCOUNT
 
 where COUNT is the number of entries you want. A nice feature of
 the algorithm -- indeed, the whole point of it -- is that it is
 repeateable, so running the program with the same input files and
 different `COUNT` values will get the same output for the same
 positions.
+
+## Deliberations
+
+The same program is also used for deliberation meetings.
+In this case the `names` file is the 10 voting volunteers.
+I used the URL of the meeting webext as the `-t` seed text.
+
+See the `deliberations` Bash script.

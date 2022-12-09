@@ -1,0 +1,15 @@
+#! /bin/bash
+
+# Generate random choices for the NomCom deliberations phase, where
+# we want to (lightly) mix up the voting volunteers so that the order
+# of speaking, if necssary, and certainly voting.  This helps avoid
+# people being influenced.
+
+let MEETING 0
+while read LINE ; do
+    $((MEETING++))
+    echo
+    echo MEETING $MEETING
+    echo Seed $LINE
+    ./pick -n 2022.nc-members -c 10 -t $LINE | sed -ne 's/.*<-/-/p'
+done < 2022.nc-seeds

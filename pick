@@ -5,12 +5,17 @@ Use -h for help
 
 import argparse
 import hashlib
+from math import log
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Do RFC3797 randomization')
-parser.add_argument('-s', '--seedfile',
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument('-s', '--seedfile',
         help='File containing the seeds',
-        metavar='seeds', type=open, required=True)
+        metavar='seeds', type=open, required=False)
+group.add_argument('-t', '--seedtext',
+        help='Text string to use as seed',
+        metavar='seedtext', type=ascii, required=False)
 parser.add_argument('-n', '--names',
         help='File containing the list of names',
         metavar='names', type=open, required=True)
@@ -21,31 +26,54 @@ parser.add_argument('-d', '--debug',
         action='store_true', help='Print some debugging information')
 args = parser.parse_args()
 
+# How many bits of entropy needed to select N from P
+#                  P!
+#    log  ( ----------------- )
+#       2       N! * (P-N)!
+def entropy_needed(P, N):
+    # Not picking anything, or picking everyone?
+    if N < 1 or N >= P: return 0
+
+    result = 0.0
+    for i in range(P, P - N, -1):
+        result += log(i, 2)
+    for i in range(N, 1, -1):
+        result -= log(i, 2)
+    return int(result) + 0.5
+
 # Read the names, print the count
 names = [ line.strip() for line in args.names ]
 numnames = len(names)
 if args.debug: print('Read', numnames, 'names')
 if numnames > 0xFFFF:
-    raise SystemError("Too many names (under 0xFFFF)")
+    raise SystemError("Too many names (limit is 0xFFFF)")
+
+if args.debug:
+    print('Need approximately',
+            entropy_needed(numnames, args.count),
+            'bits of entropy');
 
 # We could directly shrink the names list (such as by
 # using `names.pop(k)`) but then the indices would vary.
 selected = [ i + 1 for i in range(0, numnames) ]
 
-# Read the seeds.
-seeds = []
-for line in args.seedfile:
-    if line[0:1] == '#': continue
-    values = [ int(x) for x in line.split() ]
-    values.sort()
-    seeds.append(values)
-
-# Generate the key string and convert to bytes
+# Read the seeds or get the seed text.
 keystring = ''
-for s in seeds:
-    keystring += '.'.join([ str(n) for n in s ])
-    keystring += './'
-if args.debug:  print('Key string is', keystring)
+if args.seedfile:
+    seeds = []
+    for line in args.seedfile:
+        if line[0:1] == '#': continue
+        values = [ int(x) for x in line.split() ]
+        values.sort()
+        seeds.append(values)
+
+    # Generate the key string and convert to bytes
+    for s in seeds:
+        keystring += '.'.join([ str(n) for n in s ])
+        keystring += './'
+else:
+    keystring = args.seedtext
+if args.debug:  print('Key string is', keystring, '\n')
 keybytes = keystring.encode()
 
 # Do the work
@@ -66,4 +94,3 @@ for i in range(0, args.count):
     selected[j] = 0
     div -= 1
     prefix += 1
-
