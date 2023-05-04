@@ -1,5 +1,7 @@
 Read 267 names
-Key string is 7.8.11.18.28.40.48./15.16.21.31.36.65./8.12.13.17.21.26.35.42./1.5.10.13.14.16.21.25.27./
+Need approximately 58.5 bits of entropy
+Key string is 7.8.11.18.28.40.48./15.16.21.31.36.65./8.12.13.17.21.26.35.42./1.5.10.13.14.16.21.25.27./ 
+
  index        hex value of MD5        div  selected
     1  D0BD0C1947856D9EC8892BFD7B8F537A  267  -> 171 <- Quan Xiong,Wuhan Zhongxing Software Company Limited,1
     2  A9B445CD350943417B4A365D4752F665  266  -> 245 <- Xuesong Geng,Huawei,1
