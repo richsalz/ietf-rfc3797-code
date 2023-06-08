@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+# Generate a hash chain from a seed.
+# By Martin Thomson, posted to IETF eligibilty-discuss at
+#   https://mailarchive.ietf.org/arch/msg/eligibility-discuss/xH7C0amrezjq-p3aMeF3h01S3I0/
+# "For now, I'll share the code I used to generate it.  The value published
+# is on line 25 of the output.  I'll use line 24 first, if necessary, then 23,
+# and so on.  Hopefully I won't need too many, but if we have extraordinary bad
+# luck and things drag on, then public randomness might be needed.  I consider
+# that unlikely, but Rich had three people decline or fail to answer, so a few
+# rounds seems entirely possible."
+import hashlib
+import sys
+
+count = 25
+
+if len(sys.argv) < 2:
+    print(f"Usage: {sys.argv[0]} <seed string>")
+    exit(2)
+
+input = sys.argv[1]
+if not input.isascii():
+    print("Supplied string is not ASCII")
+    exit(2)
+
+print(f"input[{len(input)}]: '{input}'")
+b = input.encode('ascii')
+print(f" 0: {b.hex()}")
+x = hashlib.sha256(b)
+for i in range(1,count):
+    print(f"{i:>2}: {x.hexdigest()}")
+    x = hashlib.sha256(x.digest())
+
+print(f"{count:>2}: {x.hexdigest()}")
