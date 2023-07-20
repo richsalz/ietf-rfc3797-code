@@ -24,6 +24,8 @@ parser.add_argument('-c', '--count',
         default=12, metavar='N', type=int)
 parser.add_argument('-d', '--debug',
         action='store_true', help='Print some debugging information')
+parser.add_argument('-x', '--extra',
+        required=False, help='An additional seed for the input')
 args = parser.parse_args()
 
 # How many bits of entropy needed to select N from P
@@ -73,6 +75,7 @@ if args.seedfile:
         keystring += './'
 else:
     keystring = args.seedtext
+if args.extra is not None: keystring += args.extra + './'
 if args.debug:  print('Key string is', keystring, '\n')
 keybytes = keystring.encode()
 
