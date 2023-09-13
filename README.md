@@ -45,3 +45,9 @@ Martin Thomson (NomCom Chair 2023-2024) used a hash-chain for this situation,
 starting from a private seed and working backwards.  See RFC 1760 for more
 details.  The `extra-seed` program posted by Martin does this, and the
 `-x` flag to `pick` is used to add in this extra seed string.
+
+## C Reference code
+
+An algorithm for picking volunteers was described in RFC 3797, and
+the reference code from that RFC can be found in `./reference-code`
+I added the `-x` flag to that code.
