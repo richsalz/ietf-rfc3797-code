@@ -19,7 +19,7 @@ group.add_argument('-t', '--seedtext',
 parser.add_argument('-n', '--names',
         help='File containing the list of names',
         metavar='names', type=open, required=True)
-parser.add_argument('-c', '--count', 
+parser.add_argument('-c', '--count',
         help='Number of entries to print',
         default=12, metavar='N', type=int)
 parser.add_argument('-d', '--debug',
@@ -42,7 +42,7 @@ def entropy_needed(P, N):
     return int(result) + 0.5
 
 # Read the names, print the count
-names = [ line.strip() for line in args.names ]
+names = [ line.strip() for line in args.names if line.strip() != "" ]
 numnames = len(names)
 if args.debug: print('Read', numnames, 'names')
 if numnames > 0xFFFF:
@@ -62,7 +62,7 @@ keystring = ''
 if args.seedfile:
     seeds = []
     for line in args.seedfile:
-        if line[0:1] == '#': continue
+        if line.strip() == "" or line.strip()[0:1] == '#': continue
         values = [ int(x) for x in line.split() ]
         values.sort()
         seeds.append(values)
